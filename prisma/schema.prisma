@@ -18,6 +18,13 @@ model Product {
   name  String
   price Float
 
+  // soft delete
+  available Boolean   @default(true)
+  deletedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // index
+  @@index([available], name: "available_index")
 }

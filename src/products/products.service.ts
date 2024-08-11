@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { PaginationDto } from 'src/shared/dtos';
 import { PrismaService } from 'src/shared/services';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -9,22 +10,85 @@ export class ProductsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+    return this.prismaService.product.create({
+      data: createProductDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+
+    const [total, products] = await Promise.all([
+      this.prismaService.product.count({
+        where: {
+          // soft delete
+          available: true,
+        },
+      }),
+      this.prismaService.product.findMany({
+        skip: (page - 1) * limit, // -1 'cause page starts at 1
+        take: limit,
+        where: {
+          // soft delete
+          available: true,
+        },
+      }),
+    ]);
+
+    const lastPage = Math.ceil(total / limit);
+    const nextPage = page < lastPage ? page + 1 : null;
+    const prevPage = page > 1 ? page - 1 : null;
+
+    return {
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+        nextPage,
+        prevPage: page > lastPage ? null : prevPage,
+      },
+      data: products,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id,
+
+        // soft delete
+        available: true,
+      },
+    });
+    if (!product) throw new NotFoundException(`Product #${id} not found`);
+
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    await this.findOne(id);
+
+    return this.prismaService.product.update({
+      where: { id },
+      data: updateProductDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  // en microservices el DELETE FISICO NO se debe hacer xq no se sabe cuantos servicios dependen de ese recurso y debuggear entre microservicios es complicado
+  async remove(id: number) {
+    /*     // HARD DELETE --------
+    await this.findOne(id);
+
+    this.prismaService.product.delete({
+      where: { id },
+    }); */
+
+    // SOFT DELETE --------
+    await this.findOne(id);
+    await this.prismaService.product.update({
+      where: { id },
+      data: { available: false, deletedAt: new Date() },
+    });
   }
 }

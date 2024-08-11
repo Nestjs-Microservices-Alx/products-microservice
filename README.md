@@ -56,7 +56,7 @@
         pnpm exec prisma init
       ```
 
-  - -- Corremos migraciones
+  - -- Corremos `MIGRACIONES`
     - run:
       ```sh
         pnpm exec prisma migrate dev --name init
@@ -83,6 +83,9 @@
 
       https://docs.nestjs.com/recipes/prisma#set-up-prisma
 
+
+  - -- Crear nuevas migraciones:
+    - run: `pnpm exec prisma migrate dev --name added_sku`  <- le damos el nombre q queremos
 
 
 
