@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // // logger ------------
-  const logger = new Logger('Bootstrap');
+  const logger = new Logger('MAIN');
 
   // // envs
   const PORT = envs.PORT;

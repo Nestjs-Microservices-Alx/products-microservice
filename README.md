@@ -20,10 +20,6 @@
 
 
 
-      https://docs.nestjs.com/techniques/database
-
-
-
 
 - --- `DTO`
   - -- Para validarlo instalamos:  `pnpm add class-validator class-transformer`
@@ -42,6 +38,50 @@
     - -- Creamos el   `envs.ts`    en el  /config   <--  creamos el .env tb
     - -- En el   `main.ts`   lo usamos y ya, sin configs especiales
 
+
+
+
+
+### Prisma
+- --- Usaremos PrismaORM para poder interactuar con la DB
+  - -- Instalamos prisma y setup
+    - run
+      ```sh
+        pnpm add -D prisma
+      ```
+
+  - -- Iniciamos prisma
+    - Inicializa prisma proplus :v
+      ```sh
+        pnpm exec prisma init
+      ```
+
+  - -- Corremos migraciones
+    - run:
+      ```sh
+        pnpm exec prisma migrate dev --name init
+      ```
+
+  - -- Prisma Client
+    - Este si no va en dev, este si se necesita:
+      ```sh
+        pnpm add @prisma/client
+      ```
+
+    - Seteamos este prima client en el Service q vaya a utilizarlo:
+      - `service.ts`:
+        - Se lo usa y configura con el OnModuleInit como el NgOnInit de angular:
+          - PrismaClient, OnModuleInit
+        ```ts
+          @Injectable()
+          export class PrismaService extends PrismaClient implements OnModuleInit {
+            async onModuleInit() {
+              await this.$connect();
+            }
+          }
+        ```
+
+      https://docs.nestjs.com/recipes/prisma#set-up-prisma
 
 
 
