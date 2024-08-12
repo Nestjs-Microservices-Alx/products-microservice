@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/shared/dtos';
 import { PrismaService } from 'src/shared/services';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -61,7 +62,8 @@ export class ProductsService {
         available: true,
       },
     });
-    if (!product) throw new NotFoundException(`Product #${id} not found`);
+    // if (!product) throw new NotFoundException(`Product #${id} not found`); // rest
+    if (!product) throw new RpcException(`Product #${id} not found`); // microservices - el client lo recibe como un error, pero ya no se ve el error en el microservicio
 
     return product;
   }
