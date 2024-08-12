@@ -2,6 +2,63 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="90" alt="Nest Logo" /></a>
 </p>
 
+## Installation
+
+```bash
+$ pnpm install
+```
+
+## Running the app
+
+```bash
+# envs: based on .env.example
+
+# DB
+pnpm exec migrate dev
+```
+
+```bash
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ pnpm run test
+
+# e2e tests
+$ pnpm run test:e2e
+
+# test coverage
+$ pnpm run test:cov
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================================================= -->
+
 # Docs
 - --- Creamos un resource completo sin tests
   ```sh
@@ -123,35 +180,4 @@
 
 
 
-<!-- ========================================================================================== -->
-## Installation
 
-```bash
-$ pnpm install
-```
-
-## Running the app
-
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
