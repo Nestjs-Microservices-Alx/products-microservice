@@ -1,20 +1,31 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { envs } from './config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  // // logger ------------
-  const logger = new Logger('MAIN');
+  /* // const app = await NestFactory.create(AppModule); // only RESTful */
 
   // // envs
   const PORT = envs.PORT;
 
-  // // set global prefix ------------
-  app.setGlobalPrefix('api');
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.TCP, // para el 1er ejemplo con el MessagePattern(emito y espero respuesta)
+      options: {
+        port: PORT,
+      },
+    },
+  );
+
+  // // logger ------------
+  const logger = new Logger('MAIN');
+
+  /*   // // set global prefix ------------
+  // app.setGlobalPrefix('api'); // only RESTful */
 
   // // set global pipes ------------
   app.useGlobalPipes(
@@ -25,7 +36,11 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(PORT);
-  logger.log(`App is running on port ${PORT}`);
+  /*   // await app.listen(PORT); // only RESTful
+  // logger.log(`App is running on port ${PORT}`); // only RESTful */
+
+  // microservices
+  await app.listen();
+  logger.log(`Product Microservice is running on port ${PORT}`);
 }
 bootstrap();

@@ -67,11 +67,15 @@ export class ProductsService {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
+    // microservices adjust -----------
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, ...data } = updateProductDto; // do not update id
+
     await this.findOne(id);
 
     return this.prismaService.product.update({
       where: { id },
-      data: updateProductDto,
+      data,
     });
   }
 
