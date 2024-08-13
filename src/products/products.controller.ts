@@ -42,7 +42,8 @@ export class ProductsController {
 
   // @Delete(':id')
   @MessagePattern({ cmd: 'remove_product' })
-  remove(@Payload('id', ParseIntPipe) id: number) {
-    return this.productsService.remove(id);
+  async remove(@Payload('id', ParseIntPipe) id: number) {
+    await this.productsService.remove(id);
+    return true;
   }
 }
