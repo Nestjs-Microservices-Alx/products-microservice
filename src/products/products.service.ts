@@ -104,7 +104,6 @@ export class ProductsService {
 
   async findByIds(ids: number[]) {
     const uniqueIds = [...new Set(ids)]; // remove duplicates
-    console.log(uniqueIds);
 
     const products = await this.prismaService.product.findMany({
       where: {
