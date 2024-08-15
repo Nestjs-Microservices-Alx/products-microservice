@@ -46,4 +46,9 @@ export class ProductsController {
     await this.productsService.remove(id);
     return true;
   }
+
+  @MessagePattern({ cmd: 'find_products_by_ids' })
+  async findByIds(@Payload('ids') ids: number[]) {
+    return this.productsService.findByIds(ids);
+  }
 }

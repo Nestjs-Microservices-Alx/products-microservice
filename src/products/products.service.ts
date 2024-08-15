@@ -101,4 +101,34 @@ export class ProductsService {
       data: { available: false, deletedAt: new Date() },
     });
   }
+
+  async findByIds(ids: number[]) {
+    const uniqueIds = [...new Set(ids)]; // remove duplicates
+    console.log(uniqueIds);
+
+    const products = await this.prismaService.product.findMany({
+      where: {
+        id: {
+          in: uniqueIds,
+        },
+
+        // soft delete
+        available: true,
+      },
+    });
+
+    // validate if all products were found
+    if (products.length !== uniqueIds.length) {
+      const missingIds = uniqueIds.filter(
+        (id) => !products.map((product) => product.id).includes(id),
+      );
+
+      throw new RpcException({
+        message: `Products #${missingIds.join(', ')} not found`,
+        status: HttpStatus.NOT_FOUND,
+      });
+    }
+
+    return products;
+  }
 }
