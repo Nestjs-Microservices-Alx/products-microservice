@@ -14,9 +14,11 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.TCP, // para el 1er ejemplo con el MessagePattern(emito y espero respuesta)
+      // transport: Transport.TCP, // para el 1er ejemplo con el MessagePattern(emito y espero respuesta) no nats :v
+      transport: Transport.NATS, // ya pasamos el microservice de TCP a NATS
       options: {
-        port: PORT,
+        // port: PORT,// TCP
+        servers: envs.NATS_SERVERS, // NATS
       },
     },
   );

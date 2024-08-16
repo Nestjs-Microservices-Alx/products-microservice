@@ -45,6 +45,16 @@ services:
     ports:
       - '27017:27017'
 
+  # ### NATS
+  nats:
+    image: nats:2.10.18
+    container_name: nats_container
+    restart: unless-stopped
+    ports:
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+
 volumes:
   postgres_data:
   pgadmin_data:
